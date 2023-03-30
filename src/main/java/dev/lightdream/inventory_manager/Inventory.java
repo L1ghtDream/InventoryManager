@@ -14,26 +14,25 @@ import java.util.List;
 /**
  *
  */
-public class Inventory {
+public class Inventory implements IInventory{
 
+    private final String id;
     private final @Getter int size;
     private final @Getter String title;
 
     private final List<ArgLambdaExecutor<InventoryClickEvent>> inventoryClickEventList = new ArrayList<>();
     private final List<ArgLambdaExecutor<InventoryCloseEvent>> inventoryCloseEventList = new ArrayList<>();
 
-    public Inventory(int size, String title) {
+    public Inventory(String id, int size, String title) {
+        this.id = id;
         this.size = size;
         this.title = title;
     }
 
-    public Inventory(InventorySize size, String title) {
+    public Inventory(String id, Size size, String title) {
+        this.id=id;
         this.size = size.getSize();
         this.title = title;
-    }
-
-    public org.bukkit.inventory.Inventory generateBukkitInventory() {
-        return Bukkit.createInventory(null, size, title);
     }
 
     private void initListeners() {
@@ -75,7 +74,12 @@ public class Inventory {
         }
     }
 
-    private enum InventorySize {
+    @Override
+    public String getID() {
+        return this.id;
+    }
+
+    public static enum Size {
         SIZE_1(9),
         SIZE_2(9 * 2),
         SIZE_3(9 * 3),
@@ -85,7 +89,7 @@ public class Inventory {
 
         private final @Getter int size;
 
-        InventorySize(int size) {
+        Size(int size) {
             this.size = size;
         }
     }
