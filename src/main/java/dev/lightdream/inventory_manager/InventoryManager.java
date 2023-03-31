@@ -1,5 +1,6 @@
 package dev.lightdream.inventory_manager;
 
+import dev.lightdream.logger.Logger;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -16,6 +17,19 @@ public class InventoryManager {
     public void registerInventory(IInventory inventory) {
         if (inventories.containsKey(inventory.getTitle())) {
             throw new RuntimeException("Inventory already registered");
+        }
+        inventories.put(inventory.getID(), inventory);
+    }
+
+    public void registerInventory(IInventory inventory, boolean overrideExisting) {
+        if(!overrideExisting){
+            registerInventory(inventory);
+            return;
+        }
+        if (inventories.containsKey(inventory.getTitle())) {
+            Logger.warn("Overriding existing inventory. This may cause unexpected" +
+                    " behavior. If you see this message after a config reload it may be intended" +
+                    " as to re-register the inventory with the new config values.");
         }
         inventories.put(inventory.getID(), inventory);
     }
